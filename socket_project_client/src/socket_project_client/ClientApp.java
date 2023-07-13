@@ -4,6 +4,8 @@ import java.awt.CardLayout;
 import java.awt.EventQueue;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.Socket;
@@ -83,6 +85,18 @@ public class ClientApp extends JFrame {
 		loginPanel.add(NickLabel);
 
 		nickInputTextField = new JTextField();
+		nickInputTextField.addKeyListener(new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				mainCardLayout.show(mainCardPanel, "roomListPanel");
+			}
+		}
+		
+		});
+		
+		
+		
 		nickInputTextField.setBounds(78, 160, 334, 45);
 		loginPanel.add(nickInputTextField);
 		nickInputTextField.setColumns(10);
@@ -116,6 +130,10 @@ public class ClientApp extends JFrame {
 		JScrollPane roomListScrollPane = new JScrollPane();
 		roomListScrollPane.setBounds(12, 121, 402, 339);
 		roomListPanel.add(roomListScrollPane);
+		
+		JPanel chatPanel = new JPanel();
+		mainCardPanel.add(chatPanel, "chatPanel");
+		chatPanel.setLayout(null);
 
 		JList roomList = new JList();
 		roomListScrollPane.setViewportView(roomList);
@@ -123,6 +141,12 @@ public class ClientApp extends JFrame {
 		JButton roomMakeBtn = new JButton("방 만들기");
 		roomMakeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		roomMakeBtn.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				mainCardLayout.show(mainCardPanel, "chatPanel");
 			}
 		});
 		roomMakeBtn.setBounds(326, 73, 88, 38);
@@ -133,9 +157,6 @@ public class ClientApp extends JFrame {
 		roomListTitle.setBounds(12, 21, 402, 38);
 		roomListPanel.add(roomListTitle);
 
-		JPanel chatPanel = new JPanel();
-		mainCardPanel.add(chatPanel, "chatPanel");
-		chatPanel.setLayout(null);
 
 		JLabel roomTitleLabel = new JLabel("방 제목");
 		roomTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
