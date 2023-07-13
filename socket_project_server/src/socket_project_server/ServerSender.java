@@ -6,6 +6,7 @@ import java.net.Socket;
 
 import com.google.gson.Gson;
 
+
 import socket_project_server.DTO.RequestBodyDTO;
 
 public class ServerSender {
@@ -28,8 +29,10 @@ public class ServerSender {
 		try {
 			PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 			printWriter.println(gson.toJson(requestBodyDto));
+			System.out.println("asdfasdfasdfadfasdff adfg afdgaehrhaFAES");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 }
+
