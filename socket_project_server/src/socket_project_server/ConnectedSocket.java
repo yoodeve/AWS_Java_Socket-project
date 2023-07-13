@@ -26,7 +26,6 @@ public class ConnectedSocket extends Thread {
 			try {
 				BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				String requestBody = bufferedReader.readLine();
-				System.out.println("connectedSocket" + requestBody);
 				requestController(requestBody);
 				
 			} catch (IOException e) {
@@ -37,10 +36,11 @@ public class ConnectedSocket extends Thread {
 	
 	private void requestController(String requestBody) {
 		String resource = gson.fromJson(requestBody, RequestBodyDTO.class).getResource();
-		
+		System.out.println("server controller flag"+ resource);
 		switch (resource) {
-		case "showMessage" :
-			showMessage(requestBody);
+		case "sendMessage" :
+			System.out.println(1234);
+			sendMessage(requestBody);
 			break;
 			
 		default:
@@ -48,17 +48,14 @@ public class ConnectedSocket extends Thread {
 		} // 스위치 종료
 	} // 컨트롤러 종료
 	
-	private void showMessage(String requestBody) {
+	private void sendMessage(String requestBody) {
 		TypeToken<RequestBodyDTO<SendMessage>> typeToken = new TypeToken<RequestBodyDTO<SendMessage>>() {};
 		RequestBodyDTO<SendMessage> requestBodyDto = gson.fromJson(requestBody, typeToken.getType());
 		SendMessage sendMessage = requestBodyDto.getBody();
-		System.out.println("connectedSocketf lkd "+ServerApp.connectedSocketList);
-		ServerApp.connectedSocketList.forEach(connectedSocket->{
-					RequestBodyDTO<String> dto =
-							new RequestBodyDTO<String>("showMessage", 
-									sendMessage.getFromUsername()+": " + sendMessage.getMessageBody());
-					System.out.println("serverSender"+ ServerSender.getInstance());
-					ServerSender.getInstance().send(connectedSocket.socket, dto);
+		System.out.println("list ==>" + ServerApp.connectedSocketList);
+		ServerApp.connectedSocketList.forEach(con -> {
+			RequestBodyDTO<String> dto = new RequestBodyDTO<String>("sendMessage", sendMessage.getFromUsername()+": " + sendMessage.getMessageBody());
+			ServerSender.getInstance().send(con.socket, dto);
 		});
 		
 	}

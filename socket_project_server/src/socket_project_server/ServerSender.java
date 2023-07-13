@@ -28,6 +28,7 @@ public class ServerSender {
 		try {
 			PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
 			printWriter.println(gson.toJson(requestBodyDto));
+			System.out.println("asdfasdfasdfadfasdff adfg afdgaehrhaFAES");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
