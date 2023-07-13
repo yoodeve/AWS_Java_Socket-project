@@ -24,42 +24,42 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import lombok.Getter;
 import socket_project_client.DTO.RequestBodyDTO;
 import socket_project_client.DTO.SendMessage;
-import lombok.Getter;
+
 @Getter
 public class ClientApp extends JFrame {
 	private static ClientApp instance;
-	
+
 	public static ClientApp getInstance() {
-		if(instance == null) {
+		if (instance == null) {
 			instance = new ClientApp();
 		}
 		return instance;
-		
+
 	}
 
 	private String username;
 	private Socket socket;
-	
-	private CardLayout mainCardLayout; 
+
+	private CardLayout mainCardLayout;
 	private JPanel mainCardPanel;
-	
+
 	private JTextField nickInputTextField;
-	
+
 	private JPanel roomListPanel;
 	private JButton roomMakeBtn;
 	private JScrollPane roomListScrollPane;
 	private JTextField roomMakeTxtField;
 	private JList roomList;
 	private JPanel loginPanel;
-	
-	private JPanel chatPanel; 
+
+	private JPanel chatPanel;
 	private JTextField messageTextField;
 	private JTextArea messageArea;
 	private JScrollPane messageAreaScrollPane;
 	private JPanel chattingRoomPanel;
-	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -67,11 +67,10 @@ public class ClientApp extends JFrame {
 				try {
 					ClientApp frame = ClientApp.getInstance();
 					frame.setVisible(true);
-					
+
 					CilentReceiver clientReceiver = new CilentReceiver();
 					clientReceiver.start();
-			
-				
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -127,13 +126,12 @@ public class ClientApp extends JFrame {
 					mainCardLayout.show(mainCardPanel, "roomListPanel");
 				}
 			}
-		
+
 		});
-		
+
 		nickInputTextField.setBounds(78, 160, 334, 45);
 		loginPanel.add(nickInputTextField);
 		nickInputTextField.setColumns(10);
-		
 
 		JButton confirmBtn = new JButton("입 장");
 
@@ -165,7 +163,7 @@ public class ClientApp extends JFrame {
 		roomListScrollPane = new JScrollPane();
 		roomListScrollPane.setBounds(12, 121, 402, 339);
 		roomListPanel.add(roomListScrollPane);
-		
+
 		chatPanel = new JPanel();
 		mainCardPanel.add(chatPanel, "chatPanel");
 		chatPanel.setLayout(null);
@@ -192,7 +190,6 @@ public class ClientApp extends JFrame {
 		roomListTitle.setBounds(12, 21, 402, 38);
 		roomListPanel.add(roomListTitle);
 
-
 		JLabel roomTitleLabel = new JLabel("방 제목");
 		roomTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		roomTitleLabel.setBounds(12, 10, 273, 40);
@@ -211,44 +208,36 @@ public class ClientApp extends JFrame {
 		exitBtn.setBounds(291, 10, 121, 40);
 		chatPanel.add(exitBtn);
 
-		
 		////////////////////////
-		
-		
+
 ////////////////////////
-		
-		
-		chattingRoomPanel = new JPanel();   //
-		chattingRoomPanel.setBorder(new EmptyBorder(5, 5, 5, 5));  //
+
+		chattingRoomPanel = new JPanel(); //
+		chattingRoomPanel.setBorder(new EmptyBorder(5, 5, 5, 5)); //
 		chattingRoomPanel.setLayout(null);//
 		mainCardPanel.add(chattingRoomPanel, "chattingRoomPanel");//
-		
-		
+
 		messageAreaScrollPane = new JScrollPane();
 		messageAreaScrollPane.setBounds(10, 71, 275, 367);
 		chatPanel.add(messageAreaScrollPane);
 
 		messageArea = new JTextArea();
 		messageAreaScrollPane.setViewportView(messageArea);
-		
+
 		messageTextField = new JTextField();
 		messageTextField.addKeyListener(new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				SendMessage sendMessage = SendMessage.builder()
-						.fromUsername(username)
-						.messageBody(messageTextField.getText())
-						.build();
-			
-				
-				
-				RequestBodyDTO<SendMessage> requestBodyDTO
-				= new RequestBodyDTO<SendMessage>("sendMessage", sendMessage);
-				ClientSender.getInstance().send(requestBodyDTO);
-				messageTextField.setText("");
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+							.messageBody(messageTextField.getText()).build();
+
+					RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
+							sendMessage);
+					ClientSender.getInstance().send(requestBodyDTO);
+					messageTextField.setText("");
+				}
 			}
-		}
 		});
 		messageTextField.setBounds(92, 448, 320, 33);
 		chatPanel.add(messageTextField);
@@ -263,7 +252,7 @@ public class ClientApp extends JFrame {
 		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		toUserLabel.setBounds(32, 448, 61, 33);
 		chatPanel.add(toUserLabel);
-		
+
 		JScrollPane userListScrollPane = new JScrollPane();
 		userListScrollPane.setBounds(291, 94, 121, 344);
 		chatPanel.add(userListScrollPane);
@@ -271,8 +260,6 @@ public class ClientApp extends JFrame {
 		JList userList = new JList();
 		userListScrollPane.setViewportView(userList);
 
-		
-		
 	}
 }
 //
