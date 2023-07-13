@@ -2,6 +2,8 @@ package socket_project_client;
 
 import com.google.gson.Gson;
 
+import socket_project_client.DTO.RequestBodyDTO;
+
 public class CilentReceiver extends Thread {
 	@Override
 	public void run() {
@@ -15,6 +17,8 @@ public class CilentReceiver extends Thread {
 		
 		switch(resource) {
 			case "showMessage":
+				String messageContent = (String) gson.fromJson(requestBody,RequestBodyDTO.class).getBody();
+				ClientApp.getInstance().getMessageArea().append(messageContent+"\n");
 				break;
 				
 			default:

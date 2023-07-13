@@ -8,7 +8,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Objects;
 
 import javax.swing.JButton;
@@ -22,21 +24,35 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
+import socket_project_client.CilentReceiver;
+import socket_project_client.DTO.RequestBodyDTO;
+import socket_project_client.DTO.SendMessage;
 import lombok.Getter;
 
 @Getter
 public class ClientApp extends JFrame {
+	private static ClientApp instance;
+	
+	public static ClientApp getInstance() {
+		if(instance == null) {
+			instance = new ClientApp();
+		}
+		return instance;
+		
+	}
 
-	private CardLayout mainCardLayout;
+	private CardLayout mainCardLayout; 
 
 	private Socket socket;
 
 	private JPanel mainCardPanel;
 	private JPanel roomListPanel;
-
+	
+	private JTextArea messageArea;
 	private JTextField nickInputTextField;
 	private JTextField roomMakeTxtField;
 	private JTextField messageTextField;
+	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -44,6 +60,9 @@ public class ClientApp extends JFrame {
 				try {
 					ClientApp frame = new ClientApp();
 					frame.setVisible(true);
+					
+					CilentReceiver clientReceiver = new CilentReceiver();
+					clientReceiver.start();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -52,6 +71,13 @@ public class ClientApp extends JFrame {
 	}
 
 	public ClientApp() {
+		try {
+			socket = new Socket("127.0.0.1", 8000);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		mainCardLayout = new CardLayout();
 		mainCardPanel = new JPanel();
 		mainCardPanel.setLayout(mainCardLayout);
@@ -79,10 +105,10 @@ public class ClientApp extends JFrame {
 		inputNickLabel.setBounds(12, 245, 400, 45);
 		loginPanel.add(inputNickLabel);
 
-		JLabel NickLabel = new JLabel("닉네임 : ");
-		NickLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		NickLabel.setBounds(12, 160, 62, 45);
-		loginPanel.add(NickLabel);
+		JLabel nickLabel = new JLabel("닉네임 : ");
+		nickLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		nickLabel.setBounds(12, 160, 62, 45);
+		loginPanel.add(nickLabel);
 
 		nickInputTextField = new JTextField();
 		nickInputTextField.addKeyListener(new KeyAdapter() {
@@ -95,11 +121,11 @@ public class ClientApp extends JFrame {
 		
 		});
 		
-		
-		
 		nickInputTextField.setBounds(78, 160, 334, 45);
 		loginPanel.add(nickInputTextField);
 		nickInputTextField.setColumns(10);
+		
+		String username = nickInputTextField.getText();
 
 		JButton confirmBtn = new JButton("입 장");
 
@@ -112,6 +138,7 @@ public class ClientApp extends JFrame {
 				}
 				if (nickname.isBlank()) {
 					// 팝업창 추가지점(유정 07/12 17:44)
+
 					return;
 				}
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
@@ -180,7 +207,7 @@ public class ClientApp extends JFrame {
 		messageAreaScrollPane.setBounds(10, 71, 275, 367);
 		chatPanel.add(messageAreaScrollPane);
 
-		JTextArea messageArea = new JTextArea();
+		messageArea = new JTextArea();
 		messageAreaScrollPane.setViewportView(messageArea);
 
 		JScrollPane userListScrollPane = new JScrollPane();
@@ -193,6 +220,20 @@ public class ClientApp extends JFrame {
 		messageTextField = new JTextField();
 		messageTextField.setBounds(92, 448, 320, 33);
 		chatPanel.add(messageTextField);
+		messageTextField.addKeyListener(new KeyAdapter() {
+		@Override
+		public void keyPressed(KeyEvent e) {
+			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+				SendMessage sendMessage = SendMessage.builder().fromUsername(username).messageBody(messageTextField.getText()).build();
+			
+				RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("showMessage", sendMessage);
+				System.out.println("ClientApp"+requestBodyDTO);
+				ClientSender.getInstance().send(requestBodyDTO);
+				System.out.println("ClientApp2222"+requestBodyDTO);
+				messageTextField.setText("");
+			}
+		}
+		});
 		messageTextField.setColumns(10);
 
 		JLabel toLabel = new JLabel("to:");

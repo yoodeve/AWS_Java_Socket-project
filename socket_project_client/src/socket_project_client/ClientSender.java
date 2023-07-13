@@ -24,12 +24,13 @@ public class ClientSender {
 
 	// 전송 메소드(재사용 가능)
 	public void send(RequestBodyDTO<?> requestBodyDto) {
-//		try {
-			// 아래행 루트파일 싱글톤 작성 후 주석해제, 생성 후 getSocket
-//			PrintWriter printWriter = new PrintWriter(ClientRoot.getSocket().getOutputStream(), true);
-//			printWriter.println(gson.toJson(requestBodyDto));
-//		} catch (IOException e) {
-//			e.printStackTrace();
-//		}
+		try {
+			System.out.println("clientSender");
+			PrintWriter printWriter = new PrintWriter(ClientApp.getInstance().getSocket().getOutputStream(), true);
+			printWriter.println(gson.toJson(requestBodyDto));
+			System.out.println("clientSender"+gson.toJson(requestBodyDto));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
