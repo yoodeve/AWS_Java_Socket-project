@@ -1,4 +1,4 @@
-package socket_project_client.DTO;
++package socket_project_client.DTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
