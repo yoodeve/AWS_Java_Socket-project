@@ -24,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import socket_project_client.CilentReceiver;
 import socket_project_client.DTO.RequestBodyDTO;
 import socket_project_client.DTO.SendMessage;
 import lombok.Getter;
@@ -52,6 +51,8 @@ public class ClientApp extends JFrame {
 	private JTextField nickInputTextField;
 	private JTextField roomMakeTxtField;
 	private JTextField messageTextField;
+	
+	private String username;
 	
 
 	public static void main(String[] args) {
@@ -112,12 +113,12 @@ public class ClientApp extends JFrame {
 
 		nickInputTextField = new JTextField();
 		nickInputTextField.addKeyListener(new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				mainCardLayout.show(mainCardPanel, "roomListPanel");
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					mainCardLayout.show(mainCardPanel, "roomListPanel");
+				}
 			}
-		}
 		
 		});
 		
@@ -125,7 +126,6 @@ public class ClientApp extends JFrame {
 		loginPanel.add(nickInputTextField);
 		nickInputTextField.setColumns(10);
 		
-		String username = nickInputTextField.getText();
 
 		JButton confirmBtn = new JButton("입 장");
 
@@ -209,6 +209,7 @@ public class ClientApp extends JFrame {
 
 		messageArea = new JTextArea();
 		messageAreaScrollPane.setViewportView(messageArea);
+		messageArea.setEditable(false);
 
 		JScrollPane userListScrollPane = new JScrollPane();
 		userListScrollPane.setBounds(291, 94, 121, 344);
@@ -224,12 +225,10 @@ public class ClientApp extends JFrame {
 		@Override
 		public void keyPressed(KeyEvent e) {
 			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				SendMessage sendMessage = SendMessage.builder().fromUsername(username).messageBody(messageTextField.getText()).build();
+				SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText()).messageBody(messageTextField.getText()).build();
 			
-				RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("showMessage", sendMessage);
-				System.out.println("ClientApp"+requestBodyDTO);
+				RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage", sendMessage);
 				ClientSender.getInstance().send(requestBodyDTO);
-				System.out.println("ClientApp2222"+requestBodyDTO);
 				messageTextField.setText("");
 			}
 		}
