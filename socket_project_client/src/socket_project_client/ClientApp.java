@@ -60,9 +60,6 @@ public class ClientApp extends JFrame {
 	private JScrollPane messageAreaScrollPane;
 	private JPanel chattingRoomPanel;
 	
-	
-	private String username;
-	
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
