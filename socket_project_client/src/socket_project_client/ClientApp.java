@@ -24,7 +24,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import socket_project_client.CilentReceiver;
 import socket_project_client.DTO.RequestBodyDTO;
 import socket_project_client.DTO.SendMessage;
 import lombok.Getter;
@@ -61,6 +60,8 @@ public class ClientApp extends JFrame {
 	private JScrollPane messageAreaScrollPane;
 	private JPanel chattingRoomPanel;
 	
+	
+	private String username;
 	
 
 	public static void main(String[] args) {
@@ -123,12 +124,12 @@ public class ClientApp extends JFrame {
 
 		nickInputTextField = new JTextField();
 		nickInputTextField.addKeyListener(new KeyAdapter() {
-		@Override
-		public void keyPressed(KeyEvent e) {
-			if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-				mainCardLayout.show(mainCardPanel, "roomListPanel");
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					mainCardLayout.show(mainCardPanel, "roomListPanel");
+				}
 			}
-		}
 		
 		});
 		
@@ -136,7 +137,6 @@ public class ClientApp extends JFrame {
 		loginPanel.add(nickInputTextField);
 		nickInputTextField.setColumns(10);
 		
-		String username = nickInputTextField.getText();
 
 		JButton confirmBtn = new JButton("입 장");
 
