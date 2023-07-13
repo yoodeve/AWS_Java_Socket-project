@@ -20,7 +20,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-public class ClientRoot extends JFrame {
+import lombok.Getter;
+
+@Getter
+public class ClientApp extends JFrame {
 
 	private CardLayout mainCardLayout;
 
@@ -37,7 +40,7 @@ public class ClientRoot extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					ClientRoot frame = new ClientRoot();
+					ClientApp frame = new ClientApp();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -46,7 +49,7 @@ public class ClientRoot extends JFrame {
 		});
 	}
 
-	public ClientRoot() {
+	public ClientApp() {
 		mainCardLayout = new CardLayout();
 		mainCardPanel = new JPanel();
 		mainCardPanel.setLayout(mainCardLayout);

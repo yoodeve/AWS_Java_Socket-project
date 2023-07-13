@@ -3,6 +3,7 @@
 bin
 .settings
 target
+.metadata
 
 # file
 .classpath
