@@ -42,7 +42,7 @@ public class ConnectedSocket extends Thread {
 
 	private void requestController(String requestBody) {
 		String resource = gson.fromJson(requestBody, RequestBodyDTO.class).getResource();
-		System.out.println("서버 리소스 " + resource);
+
 		switch (resource) {
 
 		// enter(나):join
@@ -68,12 +68,6 @@ public class ConnectedSocket extends Thread {
 		case "sendMessage":
 
 			sendMessage(requestBody);
-
-			break;
-
-		case "exitRoom":
-
-			exitRoom(requestBody);
 
 			break;
 //
@@ -164,9 +158,6 @@ public class ConnectedSocket extends Thread {
 
 	}
 
-	private void exitRoom(String requestBody) {
+	// 각종 메소드 위치
 
-	}
 }
-
-// 각종 메소드 위치

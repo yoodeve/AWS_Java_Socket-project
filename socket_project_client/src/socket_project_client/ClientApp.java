@@ -43,6 +43,7 @@ public class ClientApp extends JFrame {
 	}
 
 	private String username;
+
 	private Socket socket;
 
 	private CardLayout mainCardLayout;
@@ -59,11 +60,15 @@ public class ClientApp extends JFrame {
 	private DefaultListModel<String> roomListModel;
 	private JPanel loginPanel;
 
+	private JPanel chattingRoomPanel;
 	private JPanel chatPanel;
 	private JTextField messageTextField;
 	private JTextArea messageArea;
 	private JScrollPane messageAreaScrollPane;
-	private JPanel chattingRoomPanel;
+
+	private DefaultListModel<String> userListModel;
+	private JList userList;
+	private JScrollPane userListScrollPane;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -219,13 +224,24 @@ public class ClientApp extends JFrame {
 		roomList = new JList(roomListModel);
 		roomListScrollPane.setViewportView(roomList);
 
+		JLabel roomListTitle = new JLabel("<< 방 목 록 >>");
+		roomListTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		roomListTitle.setBounds(12, 21, 402, 38);
+		roomListPanel.add(roomListTitle);
+
+		JLabel roomTitleLabel = new JLabel("방 제목");
+		roomTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		roomTitleLabel.setBounds(12, 10, 273, 40);
+		chatPanel.add(roomTitleLabel);
+
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				// 룸리스트 클릭(더블클릭)
 				if (e.getClickCount() == 2) {
-					String roomName = roomListModel.get(roomList.getSelectedIndex());
 					mainCardLayout.show(mainCardPanel, "chatPanel");
+					String roomName = roomListModel.get(roomList.getSelectedIndex());
+					roomTitleLabel.setText(roomName);
 
 					RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter",
 							nickInputTextField.getText());
@@ -236,16 +252,6 @@ public class ClientApp extends JFrame {
 
 		roomMakeBtn.setBounds(326, 73, 88, 38);
 		roomListPanel.add(roomMakeBtn);
-
-		JLabel roomListTitle = new JLabel("<< 방 목 록 >>");
-		roomListTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		roomListTitle.setBounds(12, 21, 402, 38);
-		roomListPanel.add(roomListTitle);
-
-		JLabel roomTitleLabel = new JLabel("방 제목");
-		roomTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		roomTitleLabel.setBounds(12, 10, 273, 40);
-		chatPanel.add(roomTitleLabel);
 
 		JButton exitBtn = new JButton("나가기 =>>");
 		exitBtn.addActionListener(new ActionListener() {
@@ -292,6 +298,14 @@ public class ClientApp extends JFrame {
 		chatPanel.add(messageTextField);
 		messageTextField.setColumns(10);
 
+		userListScrollPane = new JScrollPane();
+		userListScrollPane.setBounds(291, 94, 121, 344);
+		chatPanel.add(userListScrollPane);
+
+		userListModel = new DefaultListModel<>();
+		userList = new JList(userListModel);
+		userListScrollPane.setViewportView(userList);
+
 		JLabel toLabel = new JLabel("to:");
 		toLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		toLabel.setBounds(12, 448, 19, 33);
@@ -301,13 +315,6 @@ public class ClientApp extends JFrame {
 		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		toUserLabel.setBounds(32, 448, 61, 33);
 		chatPanel.add(toUserLabel);
-
-		JScrollPane userListScrollPane = new JScrollPane();
-		userListScrollPane.setBounds(291, 94, 121, 344);
-		chatPanel.add(userListScrollPane);
-
-		JList userList = new JList();
-		userListScrollPane.setViewportView(userList);
 
 	}
 }
