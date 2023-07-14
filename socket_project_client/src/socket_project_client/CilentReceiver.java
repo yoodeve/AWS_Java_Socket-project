@@ -49,7 +49,6 @@ public class CilentReceiver extends Thread {
 
 		case "sendMessage":
 			String messageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			System.out.println("메세지 콘텐트==>" + messageContent);
 			ClientApp.getInstance().getMessageArea().append(messageContent + "\n");
 
 			break;

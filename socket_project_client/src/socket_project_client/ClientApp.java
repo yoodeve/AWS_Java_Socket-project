@@ -123,6 +123,38 @@ public class ClientApp extends JFrame {
 			e.printStackTrace();
 		}
 
+		nickInputTextField = new JTextField();
+		nickInputTextField.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					mainCardLayout.show(mainCardPanel, "roomListPanel");
+				}
+			}
+
+		});
+
+		chatPanel = new JPanel();
+		mainCardPanel.add(chatPanel, "chatPanel");
+		chatPanel.setLayout(null);
+
+		nickInputTextField.setBounds(78, 160, 334, 45);
+		loginPanel.add(nickInputTextField);
+		nickInputTextField.setColumns(10);
+
+		myNameLabel = new JLabel("내이름");
+		myNameLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		myNameLabel.setBounds(291, 60, 121, 32);
+		chatPanel.add(myNameLabel);
+
+		try {
+			socket = new Socket("127.0.0.1", 8000);
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
 		roomListPanel = new JPanel();
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 540);
@@ -161,6 +193,10 @@ public class ClientApp extends JFrame {
 
 					return;
 				}
+
+				RequestBodyDTO<String> requestBodyDto = new RequestBodyDTO<String>("enter",
+						nickInputTextField.getText());
+				ClientSender.getInstance().send(requestBodyDto);
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
 				myNameLabel.setText(nickname);
 
@@ -180,6 +216,12 @@ public class ClientApp extends JFrame {
 		roomListScrollPane.setBounds(12, 121, 402, 339);
 		roomListPanel.add(roomListScrollPane);
 
+<<<<<<< HEAD
+=======
+		roomList = new JList();
+		roomListScrollPane.setViewportView(roomList);
+
+>>>>>>> socket-moon
 		roomMakeBtn = new JButton("방 만들기");
 		roomMakeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
