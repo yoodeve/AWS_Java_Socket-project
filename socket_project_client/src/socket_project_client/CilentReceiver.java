@@ -43,6 +43,7 @@ public class CilentReceiver extends Thread {
 		switch (resource) {
 		case "updateRoomList":
 			List<String> roomList = (List) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			System.out.println(roomList);
 			ClientApp.getInstance().getRoomListModel().clear();
 			ClientApp.getInstance().getRoomListModel().addAll(roomList);
 

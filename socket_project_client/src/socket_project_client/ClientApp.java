@@ -152,6 +152,7 @@ public class ClientApp extends JFrame {
 		confirmBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				// 닉네임버튼 클릭
 				String nickname = nickInputTextField.getText();
 				if (Objects.isNull(nickname)) {
 					return;
@@ -188,10 +189,7 @@ public class ClientApp extends JFrame {
 		roomMakeBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
-				/*
-				 * 방만들기??
-				 */
+				// 방만들기 버튼 클릭
 				String roomName = roomMakeTxtField.getText();
 
 				if (Objects.isNull(roomName)) {
@@ -211,17 +209,9 @@ public class ClientApp extends JFrame {
 
 				}
 				roomListModel.addElement(roomName);
-
-				RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter",
-						nickInputTextField.getText());
-				ClientSender.getInstance().send(requestOwnerNameDto);
-
 				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("createRoom", roomName);
 				ClientSender.getInstance().send(requestBodyDTO);
-				/*
-				 * 방만들기??
-				 */
-
+				roomMakeTxtField.setText("");
 			}
 		});
 
@@ -232,13 +222,14 @@ public class ClientApp extends JFrame {
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
-				if (e.getClickCount() == 2) { // 더블클릭을 받아서 선택된 방의 인덱스(순서) 가져오는 원리.
-					String roomName = roomListModel.get(roomList.getSelectedIndex()); // 방이름 가져오기
+				// 룸리스트 클릭(더블클릭)
+				if (e.getClickCount() == 2) {
+					String roomName = roomListModel.get(roomList.getSelectedIndex());
 					mainCardLayout.show(mainCardPanel, "chatPanel");
 
-//					RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("enter", roomName);
-//					ClientSender.getInstance().send(requestBodyDTO);
+					RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter",
+							nickInputTextField.getText());
+					ClientSender.getInstance().send(requestOwnerNameDto);
 				}
 			}
 		});
@@ -259,9 +250,9 @@ public class ClientApp extends JFrame {
 		JButton exitBtn = new JButton("나가기 =>>");
 		exitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainCardLayout.show(mainCardPanel, "roomListPanel"); ////////////////////////////
-				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", null);////////////////////////////
-				ClientSender.getInstance().send(requestBodyDTO);////////////////////////////
+				mainCardLayout.show(mainCardPanel, "roomListPanel");
+				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", null);
+				ClientSender.getInstance().send(requestBodyDTO);
 
 			}
 		});
@@ -269,10 +260,10 @@ public class ClientApp extends JFrame {
 		exitBtn.setBounds(291, 10, 121, 40);
 		chatPanel.add(exitBtn);
 
-		chattingRoomPanel = new JPanel(); //
-		chattingRoomPanel.setBorder(new EmptyBorder(5, 5, 5, 5)); //
-		chattingRoomPanel.setLayout(null);//
-		mainCardPanel.add(chattingRoomPanel, "chattingRoomPanel");//
+		chattingRoomPanel = new JPanel();
+		chattingRoomPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		chattingRoomPanel.setLayout(null);
+		mainCardPanel.add(chattingRoomPanel, "chattingRoomPanel");
 
 		messageAreaScrollPane = new JScrollPane();
 		messageAreaScrollPane.setBounds(10, 71, 275, 367);
@@ -285,6 +276,7 @@ public class ClientApp extends JFrame {
 		messageTextField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
+				// 메세지 전송
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
 					SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
 							.messageBody(messageTextField.getText()).build();
