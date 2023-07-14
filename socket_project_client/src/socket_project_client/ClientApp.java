@@ -60,7 +60,6 @@ public class ClientApp extends JFrame {
 	private DefaultListModel<String> roomListModel;
 	private JPanel loginPanel;
 
-//	private JLabel roomListTitle;
 	private JPanel chatPanel;
 	private JTextField messageTextField;
 	private JTextArea messageArea;
@@ -234,14 +233,13 @@ public class ClientApp extends JFrame {
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 룸리스트 클릭(더블클릭)
+				// 룸리스트 클릭(더블클릭) => 채팅룸 입장
 				if (e.getClickCount() == 2) {
-					mainCardLayout.show(mainCardPanel, "chatPanel");
 					String roomName = roomListModel.get(roomList.getSelectedIndex());
+					mainCardLayout.show(mainCardPanel, "chatPanel");
 					roomTitleLabel.setText(roomName);
 
-					RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter",
-							nickInputTextField.getText());
+					RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter", roomName);
 					ClientSender.getInstance().send(requestOwnerNameDto);
 				}
 			}
@@ -254,7 +252,8 @@ public class ClientApp extends JFrame {
 		exitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
-				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", null);
+				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom",
+						nickInputTextField.getText()); // 여기 방이름으로 수정
 				ClientSender.getInstance().send(requestBodyDTO);
 
 			}
@@ -310,6 +309,7 @@ public class ClientApp extends JFrame {
 		chatPanel.add(userListScrollPane);
 
 		JList userList = new JList();
+
 		userListScrollPane.setViewportView(userList);
 
 	}

@@ -51,11 +51,12 @@ public class CilentReceiver extends Thread {
 
 		case "sendMessage":
 			String messageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			System.out.println(messageContent);
 			ClientApp.getInstance().getMessageArea().append(messageContent + "\n");
 
 			break;
 
-		case " exitRoom":
+		case "exitRoom":
 			String responseType = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 			ClientApp.getInstance().getMessageArea().setText("");
 			ClientApp.getInstance().getMainCardLayout().show(ClientApp.getInstance().getMainCardPanel(),
