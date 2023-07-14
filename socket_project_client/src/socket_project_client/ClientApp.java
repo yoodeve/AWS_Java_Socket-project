@@ -85,7 +85,7 @@ public class ClientApp extends JFrame {
 		mainCardPanel.setLayout(mainCardLayout);
 		setContentPane(mainCardPanel);
 
-		JPanel loginPanel = new JPanel();
+		loginPanel = new JPanel();
 		mainCardPanel.add(loginPanel, "loginPanel");
 
 		nickInputTextField = new JTextField();
