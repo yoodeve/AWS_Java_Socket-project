@@ -6,7 +6,6 @@ import java.net.Socket;
 
 import com.google.gson.Gson;
 
-
 import socket_project_server.DTO.RequestBodyDTO;
 
 public class ServerSender {
@@ -25,14 +24,12 @@ public class ServerSender {
 	}
 
 	// 전송 메소드(재사용 가능)
-	public void send(Socket socket, RequestBodyDTO<?> requestBodyDto) {
+	public void send(Socket socket, RequestBodyDTO<?> requestBodyDTO) {
 		try {
 			PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-			printWriter.println(gson.toJson(requestBodyDto));
-			System.out.println("asdfasdfasdfadfasdff adfg afdgaehrhaFAES");
+			printWriter.println(gson.toJson(requestBodyDTO));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 }
-

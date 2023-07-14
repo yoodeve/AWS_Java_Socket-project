@@ -8,9 +8,11 @@ import com.google.gson.Gson;
 import socket_project_client.DTO.RequestBodyDTO;
 
 public class ClientSender {
+
 	private Gson gson;
+
 	private static ClientSender instance;
-	
+
 	private ClientSender() {
 		gson = new Gson();
 	}
@@ -23,12 +25,10 @@ public class ClientSender {
 	}
 
 	// 전송 메소드(재사용 가능)
-	public void send(RequestBodyDTO<?> requestBodyDto) {
+	public void send(RequestBodyDTO<?> requestBodyDTO) {
 		try {
-			System.out.println("clientSender");
 			PrintWriter printWriter = new PrintWriter(ClientApp.getInstance().getSocket().getOutputStream(), true);
-			printWriter.println(gson.toJson(requestBodyDto));
-			System.out.println("clientSender"+gson.toJson(requestBodyDto));
+			printWriter.println(gson.toJson(requestBodyDTO));
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
