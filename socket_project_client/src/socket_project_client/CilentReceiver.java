@@ -38,6 +38,7 @@ public class CilentReceiver extends Thread {
 	private void requestController(String requestBody) {
 		Gson gson = new Gson();
 		String resource = gson.fromJson(requestBody, RequestBodyDTO.class).getResource();
+
 		System.out.println(resource);
 		switch (resource) {
 		case "updateRoomList":
@@ -49,9 +50,15 @@ public class CilentReceiver extends Thread {
 
 		case "sendMessage":
 			String messageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			System.out.println("메세지 콘텐트==>" + messageContent);
 			ClientApp.getInstance().getMessageArea().append(messageContent + "\n");
 
+			break;
+
+		case " exitRoom":
+			String responseType = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			ClientApp.getInstance().getMessageArea().setText("");
+			ClientApp.getInstance().getMainCardLayout().show(ClientApp.getInstance().getMainCardPanel(),
+					"roomListPanel");
 			break;
 
 		default:

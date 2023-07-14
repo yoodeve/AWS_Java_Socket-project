@@ -70,6 +70,12 @@ public class ConnectedSocket extends Thread {
 			sendMessage(requestBody);
 
 			break;
+
+		case "exitRoom":
+
+			exitRoom(requestBody);
+
+			break;
 //
 //		default:
 //			break;
@@ -158,6 +164,9 @@ public class ConnectedSocket extends Thread {
 
 	}
 
-	// 각종 메소드 위치
+	private void exitRoom(String requestBody) {
 
+	}
 }
+
+// 각종 메소드 위치

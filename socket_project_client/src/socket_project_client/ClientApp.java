@@ -259,11 +259,16 @@ public class ClientApp extends JFrame {
 		JButton exitBtn = new JButton("나가기 =>>");
 		exitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				mainCardLayout.show(mainCardPanel, "roomListPanel"); ////////////////////////////
+				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", null);////////////////////////////
+				ClientSender.getInstance().send(requestBodyDTO);////////////////////////////
+
 			}
 		});
 
 		exitBtn.setBounds(291, 10, 121, 40);
 		chatPanel.add(exitBtn);
+
 		chattingRoomPanel = new JPanel(); //
 		chattingRoomPanel.setBorder(new EmptyBorder(5, 5, 5, 5)); //
 		chattingRoomPanel.setLayout(null);//
