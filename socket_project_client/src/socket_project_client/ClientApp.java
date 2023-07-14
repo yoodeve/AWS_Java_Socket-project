@@ -229,7 +229,7 @@ public class ClientApp extends JFrame {
 			@Override
 			public void keyPressed(KeyEvent e) {
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					SendMessage sendMessage = SendMessage.builder().fromUsername(username)
+					SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
 							.messageBody(messageTextField.getText()).build();
 
 					RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
