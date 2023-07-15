@@ -61,10 +61,12 @@ public class ClientApp extends JFrame {
 	private JPanel loginPanel;
 
 	private JPanel chatPanel;
+	private DefaultListModel<String> userListModel;
 	private JTextField messageTextField;
 	private JTextArea messageArea;
 	private JScrollPane messageAreaScrollPane;
 	private JPanel chattingRoomPanel;
+	private JList userList;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -163,6 +165,9 @@ public class ClientApp extends JFrame {
 
 					return;
 				}
+				RequestBodyDTO<String> requestBodyDto = new RequestBodyDTO<String>("connection", nickname);
+				System.out.println("frame.username" + nickname);
+				ClientSender.getInstance().send(requestBodyDto);
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
 				myNameLabel.setText(nickname);
 
@@ -251,9 +256,9 @@ public class ClientApp extends JFrame {
 		JButton exitBtn = new JButton("나가기 =>>");
 		exitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String roomName = roomListModel.get(roomList.getSelectedIndex());
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
-				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom",
-						nickInputTextField.getText()); // 여기 방이름으로 수정
+				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", roomName);
 				ClientSender.getInstance().send(requestBodyDTO);
 
 			}
@@ -273,6 +278,7 @@ public class ClientApp extends JFrame {
 
 		messageArea = new JTextArea();
 		messageAreaScrollPane.setViewportView(messageArea);
+		messageArea.setEditable(false);
 
 		messageTextField = new JTextField();
 		messageTextField.addKeyListener(new KeyAdapter() {
@@ -308,8 +314,8 @@ public class ClientApp extends JFrame {
 		userListScrollPane.setBounds(291, 94, 121, 344);
 		chatPanel.add(userListScrollPane);
 
-		JList userList = new JList();
-
+		userListModel = new DefaultListModel<>();
+		userList = new JList(userListModel);
 		userListScrollPane.setViewportView(userList);
 
 	}

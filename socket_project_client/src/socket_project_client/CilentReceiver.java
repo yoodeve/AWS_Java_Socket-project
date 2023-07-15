@@ -56,11 +56,12 @@ public class CilentReceiver extends Thread {
 
 			break;
 
-		case "exitRoom":
-			String responseType = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			ClientApp.getInstance().getMessageArea().setText("");
-			ClientApp.getInstance().getMainCardLayout().show(ClientApp.getInstance().getMainCardPanel(),
-					"roomListPanel");
+		case "updateUserList":
+			List<String> usernameList = (List<String>) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+
+			ClientApp.getInstance().getUserListModel().clear();
+			ClientApp.getInstance().getUserListModel().addAll(usernameList);
+
 			break;
 
 		default:
