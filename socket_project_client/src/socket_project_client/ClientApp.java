@@ -286,30 +286,31 @@ public class ClientApp extends JFrame {
 		messageTextField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-// 메세지 전송
-				String messageText = messageTextField.getText();
+				// 메세지 전송
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					String messageText = messageTextField.getText();
 
-				if (!messageText.isBlank()) {
-					if (selectedUser == null || selectedUser.equals("All")) {
-						SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
-								.messageBody(messageText).build();
-						RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
-								sendMessage);
-						ClientSender.getInstance().send(requestBodyDTO);
-						messageTextField.setText("");
-					}
-					// 모든 유저에게 메시지 보내기
+					if (!messageText.isBlank()) {
+						if (selectedUser == null || selectedUser.equals("All")) {
+							SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+									.messageBody(messageText).build();
+							RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
+									sendMessage);
+							ClientSender.getInstance().send(requestBodyDTO);
+							messageTextField.setText("");
+						}
+						// 모든 유저에게 메시지 보내기
 
-					else {// 선택한 유저에게 귓속말 보내기
-						SendMessage privateMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
-								.toUsername(selectedUser).messageBody(messageText).build();
+						else {// 선택한 유저에게 귓속말 보내기
+							SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+									.toUsername(selectedUser).messageBody(messageText).build();
 
-						RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<>("sendPrivateMessage",
-								privateMessage);
-						ClientSender.getInstance().send(requestBodyDTO);
-
-						ClientSender.getInstance().send(requestBodyDTO);
-						messageTextField.setText("");
+							RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<>("sendPrivateMessage",
+									sendMessage);
+							ClientSender.getInstance().send(requestBodyDTO);
+							selectedUser = "All";
+							messageTextField.setText("");
+						}
 					}
 				}
 			}

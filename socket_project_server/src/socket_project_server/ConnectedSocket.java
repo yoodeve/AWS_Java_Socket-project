@@ -202,11 +202,13 @@ public class ConnectedSocket extends Thread {
 	}
 
 	private void sendPrivateMessage(String requestBody) {
-
-		SendMessage privateMessage = (SendMessage) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+		TypeToken<RequestBodyDTO<SendMessage>> typeToken = new TypeToken<RequestBodyDTO<SendMessage>>() {
+		};
+		RequestBodyDTO<SendMessage> requestBodyDto = gson.fromJson(requestBody, typeToken.getType());
+		SendMessage privateMessage = requestBodyDto.getBody();
 		String receiverUsername = privateMessage.getToUsername();
 		String privateMessageContent = privateMessage.getMessageBody();
-		System.out.println(privateMessageContent);
+
 		ServerApp.connectedSocketList.forEach(con -> {
 			if (con.username.equals(receiverUsername)) {
 				RequestBodyDTO<String> privateMessageDto = new RequestBodyDTO<>("receivePrivateMessage",
@@ -216,20 +218,4 @@ public class ConnectedSocket extends Thread {
 		});
 
 	}
-
 }
-//SendMessage privateMessage = (SendMessage) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-//String receiverUsername = privateMessage.getToUsername();
-//String privateMessageContent = privateMessage.getMessageBody();
-//System.out.println(privateMessageContent);
-//ServerApp.connectedSocketList.forEach(con -> {
-//	if (con.username.equals(receiverUsername)) {
-//		RequestBodyDTO<String> privateMessageDto = new RequestBodyDTO<>("receivePrivateMessage",
-//				privateMessageContent);
-//		ServerSender.getInstance().send(con.socket, privateMessageDto);
-//	}
-//});
-//
-//}
-//
-//}
