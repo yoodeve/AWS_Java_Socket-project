@@ -15,6 +15,7 @@ import socket_project_client.DTO.RequestBodyDTO;
 public class CilentReceiver extends Thread {
 	@Override
 	public void run() {
+
 		ClientApp app = ClientApp.getInstance();
 		while (true) {
 			try {
@@ -33,6 +34,7 @@ public class CilentReceiver extends Thread {
 				e.printStackTrace();
 			}
 		}
+
 	}// run 종료
 
 	private void requestController(String requestBody) {
@@ -62,6 +64,12 @@ public class CilentReceiver extends Thread {
 			ClientApp.getInstance().getUserListModel().clear();
 			ClientApp.getInstance().getUserListModel().addAll(usernameList);
 
+			break;
+
+		case "receivePrivateMessage":
+			String privateMessageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			System.out.println(privateMessageContent);
+			ClientApp.getInstance().getMessageArea().append(privateMessageContent + "\n");
 			break;
 
 		default:
