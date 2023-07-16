@@ -189,6 +189,20 @@ public class ClientApp extends JFrame {
 		roomListScrollPane.setBounds(12, 121, 402, 339);
 		roomListPanel.add(roomListScrollPane);
 
+		JLabel toLabel = new JLabel("to:");
+		toLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		toLabel.setBounds(12, 448, 19, 33);
+		chatPanel.add(toLabel);
+
+		JLabel toUserLabel = new JLabel("All");
+		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		toUserLabel.setBounds(32, 448, 61, 33);
+		chatPanel.add(toUserLabel);
+
+		JScrollPane userListScrollPane = new JScrollPane();
+		userListScrollPane.setBounds(291, 94, 121, 344);
+		chatPanel.add(userListScrollPane);
+
 		roomMakeBtn = new JButton("방 만들기");
 		roomMakeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -310,6 +324,7 @@ public class ClientApp extends JFrame {
 							ClientSender.getInstance().send(requestBodyDTO);
 							selectedUser = "All";
 							messageTextField.setText("");
+							toUserLabel.setText("All");
 						}
 					}
 				}
@@ -319,20 +334,6 @@ public class ClientApp extends JFrame {
 		messageTextField.setBounds(92, 448, 320, 33);
 		chatPanel.add(messageTextField);
 		messageTextField.setColumns(10);
-
-		JLabel toLabel = new JLabel("to:");
-		toLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		toLabel.setBounds(12, 448, 19, 33);
-		chatPanel.add(toLabel);
-
-		JLabel toUserLabel = new JLabel("All");
-		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		toUserLabel.setBounds(32, 448, 61, 33);
-		chatPanel.add(toUserLabel);
-
-		JScrollPane userListScrollPane = new JScrollPane();
-		userListScrollPane.setBounds(291, 94, 121, 344);
-		chatPanel.add(userListScrollPane);
 
 		userListModel = new DefaultListModel<>();
 		userList = new JList(userListModel);
@@ -347,9 +348,10 @@ public class ClientApp extends JFrame {
 					if (!selectedUser.equals(myNameLabel.getText())) {
 						toUserLabel.setText(selectedUser);
 					}
+
 				}
 			}
-		});
 
+		});
 	}
 }
