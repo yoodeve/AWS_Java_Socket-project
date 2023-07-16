@@ -60,15 +60,15 @@ public class ClientApp extends JFrame {
 	private DefaultListModel<String> roomListModel;
 	private JPanel loginPanel;
 
-	private JPanel chattingRoomPanel;
 	private JPanel chatPanel;
+	private DefaultListModel<String> userListModel;
 	private JTextField messageTextField;
 	private JTextArea messageArea;
 	private JScrollPane messageAreaScrollPane;
-
-	private DefaultListModel<String> userListModel;
+	private JPanel chattingRoomPanel;
 	private JList userList;
-	private JScrollPane userListScrollPane;
+
+	private String selectedUser;
 
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
@@ -157,16 +157,19 @@ public class ClientApp extends JFrame {
 		confirmBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 닉네임버튼 클릭
+// 닉네임버튼 클릭
 				String nickname = nickInputTextField.getText();
 				if (Objects.isNull(nickname)) {
 					return;
 				}
 				if (nickname.isBlank()) {
-					// 팝업창 추가지점(유정 07/12 17:44)
+// 팝업창 추가지점(유정 07/12 17:44)
 
 					return;
 				}
+				RequestBodyDTO<String> requestBodyDto = new RequestBodyDTO<String>("connection", nickname);
+				System.out.println("frame.username" + nickname);
+				ClientSender.getInstance().send(requestBodyDto);
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
 				myNameLabel.setText(nickname);
 
@@ -194,9 +197,8 @@ public class ClientApp extends JFrame {
 		roomMakeBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 방만들기 버튼 클릭
+// 방만들기 버튼 클릭
 				String roomName = roomMakeTxtField.getText();
-
 				if (Objects.isNull(roomName)) {
 					return;
 				}
@@ -210,6 +212,7 @@ public class ClientApp extends JFrame {
 						JOptionPane.showMessageDialog(roomListPanel, "이미 존재하는 방제목입니다.", "방만들기 실패",
 								JOptionPane.ERROR_MESSAGE);
 						return;
+
 					}
 
 				}
@@ -237,14 +240,13 @@ public class ClientApp extends JFrame {
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 룸리스트 클릭(더블클릭)
+// 룸리스트 클릭(더블클릭) => 채팅룸 입장
 				if (e.getClickCount() == 2) {
-					mainCardLayout.show(mainCardPanel, "chatPanel");
 					String roomName = roomListModel.get(roomList.getSelectedIndex());
+					mainCardLayout.show(mainCardPanel, "chatPanel");
 					roomTitleLabel.setText(roomName);
 
-					RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter",
-							nickInputTextField.getText());
+					RequestBodyDTO<String> requestOwnerNameDto = new RequestBodyDTO<String>("enter", roomName);
 					ClientSender.getInstance().send(requestOwnerNameDto);
 				}
 			}
@@ -256,8 +258,9 @@ public class ClientApp extends JFrame {
 		JButton exitBtn = new JButton("나가기 =>>");
 		exitBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				String roomName = roomListModel.get(roomList.getSelectedIndex());
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
-				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", null);
+				RequestBodyDTO<String> requestBodyDTO = new RequestBodyDTO<String>("exitRoom", roomName);
 				ClientSender.getInstance().send(requestBodyDTO);
 
 			}
@@ -277,34 +280,44 @@ public class ClientApp extends JFrame {
 
 		messageArea = new JTextArea();
 		messageAreaScrollPane.setViewportView(messageArea);
+		messageArea.setEditable(false);
 
 		messageTextField = new JTextField();
 		messageTextField.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
-				// 메세지 전송
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
-							.messageBody(messageTextField.getText()).build();
+// 메세지 전송
+				String messageText = messageTextField.getText();
 
-					RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
-							sendMessage);
-					ClientSender.getInstance().send(requestBodyDTO);
-					messageTextField.setText("");
+				if (!messageText.isBlank()) {
+					if (selectedUser == null || selectedUser.equals("All")) {
+						SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+								.messageBody(messageText).build();
+						RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
+								sendMessage);
+						ClientSender.getInstance().send(requestBodyDTO);
+						messageTextField.setText("");
+					}
+					// 모든 유저에게 메시지 보내기
+
+					else {// 선택한 유저에게 귓속말 보내기
+						SendMessage privateMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+								.toUsername(selectedUser).messageBody(messageText).build();
+
+						RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<>("sendPrivateMessage",
+								privateMessage);
+						ClientSender.getInstance().send(requestBodyDTO);
+
+						ClientSender.getInstance().send(requestBodyDTO);
+						messageTextField.setText("");
+					}
 				}
 			}
 		});
+
 		messageTextField.setBounds(92, 448, 320, 33);
 		chatPanel.add(messageTextField);
 		messageTextField.setColumns(10);
-
-		userListScrollPane = new JScrollPane();
-		userListScrollPane.setBounds(291, 94, 121, 344);
-		chatPanel.add(userListScrollPane);
-
-		userListModel = new DefaultListModel<>();
-		userList = new JList(userListModel);
-		userListScrollPane.setViewportView(userList);
 
 		JLabel toLabel = new JLabel("to:");
 		toLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -315,6 +328,27 @@ public class ClientApp extends JFrame {
 		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
 		toUserLabel.setBounds(32, 448, 61, 33);
 		chatPanel.add(toUserLabel);
+
+		JScrollPane userListScrollPane = new JScrollPane();
+		userListScrollPane.setBounds(291, 94, 121, 344);
+		chatPanel.add(userListScrollPane);
+
+		userListModel = new DefaultListModel<>();
+		userList = new JList(userListModel);
+		userListScrollPane.setViewportView(userList);
+
+		userList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 유저 목록 더블 클릭
+				if (e.getClickCount() == 2) {
+					selectedUser = (String) userList.getSelectedValue();
+					if (!selectedUser.equals(myNameLabel.getText())) {
+						toUserLabel.setText(selectedUser);
+					}
+				}
+			}
+		});
 
 	}
 }

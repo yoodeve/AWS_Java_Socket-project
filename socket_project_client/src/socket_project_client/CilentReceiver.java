@@ -15,6 +15,7 @@ import socket_project_client.DTO.RequestBodyDTO;
 public class CilentReceiver extends Thread {
 	@Override
 	public void run() {
+
 		ClientApp app = ClientApp.getInstance();
 		while (true) {
 			try {
@@ -33,6 +34,7 @@ public class CilentReceiver extends Thread {
 				e.printStackTrace();
 			}
 		}
+
 	}// run 종료
 
 	private void requestController(String requestBody) {
@@ -43,29 +45,31 @@ public class CilentReceiver extends Thread {
 		switch (resource) {
 		case "updateRoomList":
 			List<String> roomList = (List) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			System.out.println(roomList);
 			ClientApp.getInstance().getRoomListModel().clear();
 			ClientApp.getInstance().getRoomListModel().addAll(roomList);
 
 			break;
 
+		case "sendMessage":
+			String messageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			System.out.println(messageContent);
+			ClientApp.getInstance().getMessageArea().append(messageContent + "\n");
+
+			break;
+
 		case "updateUserList":
 			List<String> usernameList = (List<String>) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+
 			ClientApp.getInstance().getUserListModel().clear();
 			ClientApp.getInstance().getUserListModel().addAll(usernameList);
 
 			break;
 
-		case "sendMessage":
-			String messageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			ClientApp.getInstance().getMessageArea().append(messageContent + "\n");
-
-			break;
-
-		case " exitRoom":
-			String responseType = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			ClientApp.getInstance().getMessageArea().setText("");
-			ClientApp.getInstance().getMainCardLayout().show(ClientApp.getInstance().getMainCardPanel(),
-					"roomListPanel");
+		case "receivePrivateMessage":
+			String privateMessageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
+			System.out.println(privateMessageContent);
+			ClientApp.getInstance().getMessageArea().append(privateMessageContent + "\n");
 			break;
 
 		default:
