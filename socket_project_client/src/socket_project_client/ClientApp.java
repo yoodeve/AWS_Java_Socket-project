@@ -171,14 +171,14 @@ public class ClientApp extends JFrame {
 				if (Objects.isNull(nickname)) {
 					return;
 				}
-				if (!nickname.matches(regExpAlpha)) {
-					JOptionPane.showMessageDialog(roomListPanel, "문자를 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
-					return;
-				}
-//				if (nickname.isBlank()) {
-//					JOptionPane.showMessageDialog(roomListPanel, "닉네임을 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
+//				if (!nickname.matches(regExpAlpha)) {
+//					JOptionPane.showMessageDialog(roomListPanel, "문자를 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
 //					return;
 //				}
+				if (nickname.isBlank()) {
+					JOptionPane.showMessageDialog(roomListPanel, "닉네임을 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
+					return;
+				}
 
 				if (!isRoomOwner) {
 					myNameLabel.setText("★방장★" + nickname);
