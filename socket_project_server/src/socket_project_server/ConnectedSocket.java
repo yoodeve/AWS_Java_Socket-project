@@ -107,7 +107,7 @@ public class ConnectedSocket extends Thread {
 	private void createRoom(String requestBody) {
 
 		String roomName = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-
+// 이 객체 빌드 시 userList가 들어가지 않아 생기는 문제
 		Room newRoom = Room.builder().roomName(roomName).owner(username).userList(new ArrayList<ConnectedSocket>())
 				.build();
 		System.out.println(newRoom);
@@ -137,7 +137,6 @@ public class ConnectedSocket extends Thread {
 				room.getUserList().add(this);
 
 				List<String> usernameList = new ArrayList<>();
-
 // 방 동접 사람들
 				room.getUserList().forEach(con -> {
 					usernameList.add(con.username);
@@ -146,9 +145,7 @@ public class ConnectedSocket extends Thread {
 				room.getUserList().forEach(connectedSocket -> {
 					RequestBodyDTO<List<String>> updateUserListDto = new RequestBodyDTO<List<String>>("updateUserList",
 							usernameList);
-
 					ServerSender.getInstance().send(connectedSocket.socket, updateUserListDto);
-
 					RequestBodyDTO<String> joinMessageDto = new RequestBodyDTO<String>("sendMessage",
 							username + "님 입장");
 // 메세지 보내고
@@ -195,12 +192,10 @@ public class ConnectedSocket extends Thread {
 					ServerSender.getInstance().send(connectedSocket.socket, updateUserListDto);
 					RequestBodyDTO<String> exitMessageDto = new RequestBodyDTO<String>("sendMessage",
 							username + "님 퇴장~!");
-					usernameList.clear();
-
 					ServerSender.getInstance().send(connectedSocket.socket, exitMessageDto);
 				});
 			}
-// username = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();0
+// username = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 // RequestBodyDTO<String> joinMessageDto = new RequestBodyDTO<String>("sendMessage", username + "님 퇴장~!");
 // ServerSender.getInstance().send(connectedSocket.socket, joinMessageDto);
 		});
