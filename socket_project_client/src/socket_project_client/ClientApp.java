@@ -168,7 +168,6 @@ public class ClientApp extends JFrame {
 					return;
 				}
 				RequestBodyDTO<String> requestBodyDto = new RequestBodyDTO<String>("connection", nickname);
-				System.out.println("frame.username" + nickname);
 				ClientSender.getInstance().send(requestBodyDto);
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
 				myNameLabel.setText(nickname);
@@ -251,6 +250,14 @@ public class ClientApp extends JFrame {
 		roomTitleLabel.setBounds(12, 10, 273, 40);
 		chatPanel.add(roomTitleLabel);
 
+		messageTextField.setBounds(92, 448, 320, 33);
+		chatPanel.add(messageTextField);
+		messageTextField.setColumns(10);
+
+		userListModel = new DefaultListModel<>();
+		userList = new JList(userListModel);
+		userListScrollPane.setViewportView(userList);
+
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -330,14 +337,6 @@ public class ClientApp extends JFrame {
 				}
 			}
 		});
-
-		messageTextField.setBounds(92, 448, 320, 33);
-		chatPanel.add(messageTextField);
-		messageTextField.setColumns(10);
-
-		userListModel = new DefaultListModel<>();
-		userList = new JList(userListModel);
-		userListScrollPane.setViewportView(userList);
 
 		userList.addMouseListener(new MouseAdapter() {
 			@Override

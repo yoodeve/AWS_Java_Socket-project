@@ -19,9 +19,11 @@ import socket_project_server.entity.Room;
 public class ConnectedSocket extends Thread {
 
 	private final Socket socket;
+	private Room newRoom;
 	private Gson gson;
 
 	private String username;
+//	private String ownerName;
 
 	@Override
 	public void run() {
@@ -108,9 +110,7 @@ public class ConnectedSocket extends Thread {
 
 		String roomName = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 // 이 객체 빌드 시 userList가 들어가지 않아 생기는 문제
-		Room newRoom = Room.builder().roomName(roomName).owner(username).userList(new ArrayList<ConnectedSocket>())
-				.build();
-		System.out.println(newRoom);
+		newRoom = Room.builder().roomName(roomName).owner(username).userList(new ArrayList<ConnectedSocket>()).build();
 		ServerApp.roomList.add(newRoom);
 
 		List<String> roomNameList = new ArrayList<>();
@@ -146,6 +146,11 @@ public class ConnectedSocket extends Thread {
 					RequestBodyDTO<List<String>> updateUserListDto = new RequestBodyDTO<List<String>>("updateUserList",
 							usernameList);
 					ServerSender.getInstance().send(connectedSocket.socket, updateUserListDto);
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					RequestBodyDTO<String> joinMessageDto = new RequestBodyDTO<String>("sendMessage",
 							username + "님 입장");
 // 메세지 보내고
@@ -180,10 +185,9 @@ public class ConnectedSocket extends Thread {
 		String roomName = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 		ServerApp.roomList.forEach(room -> {
 			if (room.getRoomName().equals(roomName)) {
-				// room.getUserList().remove(this); // 방폭
 				room.getUserList().removeIf(connectedSocket -> connectedSocket == this);
 
-				List<String> usernameList = new ArrayList<>(); // 의심됨
+				List<String> usernameList = new ArrayList<>();
 				// 방 동접 사람들
 				room.getUserList().forEach(con -> {
 					usernameList.add(con.username);
@@ -193,17 +197,25 @@ public class ConnectedSocket extends Thread {
 					RequestBodyDTO<List<String>> updateUserListDto = new RequestBodyDTO<List<String>>("updateUserList",
 							usernameList);
 					ServerSender.getInstance().send(connectedSocket.socket, updateUserListDto);
+
 					try {
-						Thread.sleep(200);
+						join(200);
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}
+
 					RequestBodyDTO<String> exitMessageDto = new RequestBodyDTO<String>("sendMessage",
 							username + "님 퇴장~!");
 					ServerSender.getInstance().send(connectedSocket.socket, exitMessageDto);
+
+					String newOwner = usernameList.get(0);
+					room.setOwner(newOwner);
+					System.out.println("room.getOwner  : " + room.getOwner());
+					RequestBodyDTO<String> newOwnerInfoMsgDTO = new RequestBodyDTO<String>("sendMessage", newOwner);
+					ServerSender.getInstance().send(connectedSocket.socket, newOwnerInfoMsgDTO);
+					System.out.println("newOOwnerInfo  :" + newOwnerInfoMsgDTO);
 				});
 			}
-
 		});
 	}
 
