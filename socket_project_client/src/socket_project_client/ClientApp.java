@@ -173,7 +173,7 @@ public class ClientApp extends JFrame {
 				}
 
 				if (!isRoomOwner) {
-					myNameLabel.setText("★방장★" + nickname);
+					myNameLabel.setText(nickname);
 					isRoomOwner = false;
 				} else {
 					myNameLabel.setText(nickname);
