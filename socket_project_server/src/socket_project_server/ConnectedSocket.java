@@ -211,9 +211,18 @@ public class ConnectedSocket extends Thread {
 
 		ServerApp.connectedSocketList.forEach(con -> {
 			if (con.username.equals(receiverUsername)) {
+				String senderUsername = this.username;
+				String fullMessageContent = "[" + senderUsername + "]" + "님의 귓속말: " + privateMessageContent;
 				RequestBodyDTO<String> privateMessageDto = new RequestBodyDTO<>("receivePrivateMessage",
-						privateMessageContent);
+						fullMessageContent);
 				ServerSender.getInstance().send(con.socket, privateMessageDto);
+
+				String senderFullMessageContent = "[나 -> " + receiverUsername + "]" + "님에게 귓속말: "
+						+ privateMessageContent;
+				RequestBodyDTO<String> senderPrivateMessageDto = new RequestBodyDTO<>("receivePrivateMessage",
+						senderFullMessageContent);
+				ServerSender.getInstance().send(socket, senderPrivateMessageDto);
+
 			}
 		});
 
