@@ -336,8 +336,6 @@ public class ClientApp extends JFrame {
 		userList = new JList(userListModel);
 		userListScrollPane.setViewportView(userList);
 
-<<<<<<< HEAD
-=======
 		userList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -352,6 +350,5 @@ public class ClientApp extends JFrame {
 			}
 
 		});
->>>>>>> NEW-MAIN
 	}
 }
