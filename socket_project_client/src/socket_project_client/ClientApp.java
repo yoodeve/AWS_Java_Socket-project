@@ -300,15 +300,6 @@ public class ClientApp extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				// 메세지 전송
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-<<<<<<< HEAD
-					SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
-							.messageBody(messageTextField.getText()).build();
-
-					RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
-							sendMessage);
-					ClientSender.getInstance().send(requestBodyDTO);
-					messageTextField.setText("");
-=======
 					String messageText = messageTextField.getText();
 
 					if (!messageText.isBlank()) {
@@ -334,7 +325,6 @@ public class ClientApp extends JFrame {
 							toUserLabel.setText("All");
 						}
 					}
->>>>>>> NEW-MAIN
 				}
 			}
 		});
