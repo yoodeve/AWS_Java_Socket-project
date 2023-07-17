@@ -60,8 +60,15 @@ public class CilentReceiver extends Thread {
 
 		case "updateUserList":
 			List<String> usernameList = (List<String>) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-
+			boolean isRoomOwner = true;
 			ClientApp.getInstance().getUserListModel().clear();
+			for (String username : usernameList) {
+				if (isRoomOwner) {
+					username = "*" + username;
+					isRoomOwner = false;
+				}
+				ClientApp.getInstance().getUserListModel().addElement(username);
+			}
 			ClientApp.getInstance().getUserListModel().addAll(usernameList);
 
 			break;
@@ -74,6 +81,7 @@ public class CilentReceiver extends Thread {
 
 		default:
 			break;
+
 		}// switch 종료
 	}// requestController 종료
 } // 클래스 종료

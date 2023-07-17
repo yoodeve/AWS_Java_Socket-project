@@ -70,6 +70,10 @@ public class ClientApp extends JFrame {
 
 	private String selectedUser;
 
+	private String firstPerson;
+
+	private boolean isRoomOwner = false;
+
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
@@ -167,11 +171,19 @@ public class ClientApp extends JFrame {
 
 					return;
 				}
+
+				if (!isRoomOwner) {
+					myNameLabel.setText("*" + nickname);
+					isRoomOwner = true;
+				} else {
+					myNameLabel.setText(nickname);
+				}
+
 				RequestBodyDTO<String> requestBodyDto = new RequestBodyDTO<String>("connection", nickname);
 				System.out.println("frame.username" + nickname);
 				ClientSender.getInstance().send(requestBodyDto);
+
 				mainCardLayout.show(mainCardPanel, "roomListPanel");
-				myNameLabel.setText(nickname);
 
 			}
 		});
