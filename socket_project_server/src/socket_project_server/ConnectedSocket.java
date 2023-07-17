@@ -100,7 +100,7 @@ public class ConnectedSocket extends Thread {
 		RequestBodyDTO<List<String>> updateRoomRequestBodyDTO = new RequestBodyDTO<List<String>>("updateRoomList",
 				roomNameList);
 
-		ServerSender.getInstance().send(socket, updateRoomRequestBodyDTO);
+//		ServerSender.getInstance().send(socket, updateRoomRequestBodyDTO);
 
 	}
 
@@ -147,7 +147,7 @@ public class ConnectedSocket extends Thread {
 							usernameList);
 					ServerSender.getInstance().send(connectedSocket.socket, updateUserListDto);
 					RequestBodyDTO<String> joinMessageDto = new RequestBodyDTO<String>("sendMessage",
-							username + "님 입장");
+							username + "님 입장~!");
 // 메세지 보내고
 					ServerSender.getInstance().send(connectedSocket.socket, joinMessageDto);
 				});
@@ -180,25 +180,32 @@ public class ConnectedSocket extends Thread {
 		String roomName = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 		ServerApp.roomList.forEach(room -> {
 			if (room.getRoomName().equals(roomName)) {
-				room.getUserList().add(this);
+				// room.getUserList().remove(this); // 방폭
+				room.getUserList().removeIf(connectedSocket -> connectedSocket == this);
 
-				List<String> usernameList = new ArrayList<>();
+				List<String> usernameList = new ArrayList<>(); // 의심됨
+				// 방 동접 사람들
 				room.getUserList().forEach(con -> {
-					usernameList.remove(con.username);
+					usernameList.add(con.username);
 				});
+
 				room.getUserList().forEach(connectedSocket -> {
 					RequestBodyDTO<List<String>> updateUserListDto = new RequestBodyDTO<List<String>>("updateUserList",
 							usernameList);
 					ServerSender.getInstance().send(connectedSocket.socket, updateUserListDto);
+					try {
+						Thread.sleep(200);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
 					RequestBodyDTO<String> exitMessageDto = new RequestBodyDTO<String>("sendMessage",
 							username + "님 퇴장~!");
 					ServerSender.getInstance().send(connectedSocket.socket, exitMessageDto);
 				});
 			}
-// username = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-// RequestBodyDTO<String> joinMessageDto = new RequestBodyDTO<String>("sendMessage", username + "님 퇴장~!");
-// ServerSender.getInstance().send(connectedSocket.socket, joinMessageDto);
+
 		});
+
 	}
 
 	private void sendPrivateMessage(String requestBody) {

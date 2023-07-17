@@ -62,6 +62,7 @@ public class CilentReceiver extends Thread {
 			List<String> usernameList = (List<String>) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 			boolean isRoomOwner = true;
 			ClientApp.getInstance().getUserListModel().clear();
+			// 방장일 때
 			for (String username : usernameList) {
 				if (isRoomOwner) {
 					username = "*" + username;
@@ -69,8 +70,6 @@ public class CilentReceiver extends Thread {
 				}
 				ClientApp.getInstance().getUserListModel().addElement(username);
 			}
-			ClientApp.getInstance().getUserListModel().addAll(usernameList);
-
 			break;
 
 		case "receivePrivateMessage":
