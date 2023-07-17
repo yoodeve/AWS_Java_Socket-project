@@ -187,6 +187,20 @@ public class ClientApp extends JFrame {
 		roomListScrollPane.setBounds(12, 121, 402, 339);
 		roomListPanel.add(roomListScrollPane);
 
+		JLabel toLabel = new JLabel("to:");
+		toLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		toLabel.setBounds(12, 448, 19, 33);
+		chatPanel.add(toLabel);
+
+		JLabel toUserLabel = new JLabel("All");
+		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		toUserLabel.setBounds(32, 448, 61, 33);
+		chatPanel.add(toUserLabel);
+
+		JScrollPane userListScrollPane = new JScrollPane();
+		userListScrollPane.setBounds(291, 94, 121, 344);
+		chatPanel.add(userListScrollPane);
+
 		roomMakeBtn = new JButton("방 만들기");
 		roomMakeBtn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -286,6 +300,7 @@ public class ClientApp extends JFrame {
 			public void keyPressed(KeyEvent e) {
 				// 메세지 전송
 				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+<<<<<<< HEAD
 					SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
 							.messageBody(messageTextField.getText()).build();
 
@@ -293,6 +308,33 @@ public class ClientApp extends JFrame {
 							sendMessage);
 					ClientSender.getInstance().send(requestBodyDTO);
 					messageTextField.setText("");
+=======
+					String messageText = messageTextField.getText();
+
+					if (!messageText.isBlank()) {
+						if (selectedUser == null || selectedUser.equals("All")) {
+							SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+									.messageBody(messageText).build();
+							RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<SendMessage>("sendMessage",
+									sendMessage);
+							ClientSender.getInstance().send(requestBodyDTO);
+							messageTextField.setText("");
+						}
+						// 모든 유저에게 메시지 보내기
+
+						else {// 선택한 유저에게 귓속말 보내기
+							SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
+									.toUsername(selectedUser).messageBody(messageText).build();
+
+							RequestBodyDTO<SendMessage> requestBodyDTO = new RequestBodyDTO<>("sendPrivateMessage",
+									sendMessage);
+							ClientSender.getInstance().send(requestBodyDTO);
+							selectedUser = "All";
+							messageTextField.setText("");
+							toUserLabel.setText("All");
+						}
+					}
+>>>>>>> NEW-MAIN
 				}
 			}
 		});
@@ -300,23 +342,26 @@ public class ClientApp extends JFrame {
 		chatPanel.add(messageTextField);
 		messageTextField.setColumns(10);
 
-		JLabel toLabel = new JLabel("to:");
-		toLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		toLabel.setBounds(12, 448, 19, 33);
-		chatPanel.add(toLabel);
-
-		JLabel toUserLabel = new JLabel("All");
-		toUserLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		toUserLabel.setBounds(32, 448, 61, 33);
-		chatPanel.add(toUserLabel);
-
-		JScrollPane userListScrollPane = new JScrollPane();
-		userListScrollPane.setBounds(291, 94, 121, 344);
-		chatPanel.add(userListScrollPane);
-
 		userListModel = new DefaultListModel<>();
 		userList = new JList(userListModel);
 		userListScrollPane.setViewportView(userList);
 
+<<<<<<< HEAD
+=======
+		userList.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				// 유저 목록 더블 클릭
+				if (e.getClickCount() == 2) {
+					selectedUser = (String) userList.getSelectedValue();
+					if (!selectedUser.equals(myNameLabel.getText())) {
+						toUserLabel.setText(selectedUser);
+					}
+
+				}
+			}
+
+		});
+>>>>>>> NEW-MAIN
 	}
 }
