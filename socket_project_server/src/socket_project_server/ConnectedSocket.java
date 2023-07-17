@@ -180,7 +180,6 @@ public class ConnectedSocket extends Thread {
 		String roomName = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 		ServerApp.roomList.forEach(room -> {
 			if (room.getRoomName().equals(roomName)) {
-				// room.getUserList().remove(this); // 방폭
 				room.getUserList().removeIf(connectedSocket -> connectedSocket == this);
 
 				List<String> usernameList = new ArrayList<>(); // 의심됨

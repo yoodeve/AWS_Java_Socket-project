@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -162,15 +164,21 @@ public class ClientApp extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 // 닉네임버튼 클릭
+				String regExpAlpha = "[^a-zA-Z]";
+				Pattern pattern = Pattern.compile(regExpAlpha);
 				String nickname = nickInputTextField.getText();
+				Matcher matcher = pattern.matcher(nickname);
 				if (Objects.isNull(nickname)) {
 					return;
 				}
-				if (nickname.isBlank()) {
-// 팝업창 추가지점(유정 07/12 17:44)
-
+				if (!nickname.matches(regExpAlpha)) {
+					JOptionPane.showMessageDialog(roomListPanel, "문자를 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
 					return;
 				}
+//				if (nickname.isBlank()) {
+//					JOptionPane.showMessageDialog(roomListPanel, "닉네임을 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
+//					return;
+//				}
 
 				if (!isRoomOwner) {
 					myNameLabel.setText("★방장★" + nickname);
