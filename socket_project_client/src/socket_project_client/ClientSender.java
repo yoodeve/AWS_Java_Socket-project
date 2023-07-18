@@ -24,7 +24,6 @@ public class ClientSender {
 		return instance;
 	}
 
-	// 전송 메소드(재사용 가능)
 	public void send(RequestBodyDTO<?> requestBodyDTO) {
 		try {
 			PrintWriter printWriter = new PrintWriter(ClientApp.getInstance().getSocket().getOutputStream(), true);

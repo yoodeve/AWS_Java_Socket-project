@@ -23,7 +23,6 @@ public class ServerSender {
 		return instance;
 	}
 
-	// 전송 메소드(재사용 가능)
 	public void send(Socket socket, RequestBodyDTO<?> requestBodyDTO) {
 		try {
 			PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);

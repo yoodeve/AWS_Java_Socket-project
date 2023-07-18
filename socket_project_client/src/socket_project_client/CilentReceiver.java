@@ -35,7 +35,7 @@ public class CilentReceiver extends Thread {
 			}
 		}
 
-	}// run 종료
+	}
 
 	private void requestController(String requestBody) {
 		Gson gson = new Gson();
@@ -45,7 +45,6 @@ public class CilentReceiver extends Thread {
 		switch (resource) {
 		case "updateRoomList":
 			List<String> roomList = (List) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			System.out.println(roomList);
 			ClientApp.getInstance().getRoomListModel().clear();
 			ClientApp.getInstance().getRoomListModel().addAll(roomList);
 
@@ -53,7 +52,6 @@ public class CilentReceiver extends Thread {
 
 		case "sendMessage":
 			String messageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			System.out.println(messageContent);
 			ClientApp.getInstance().getMessageArea().append(messageContent + "\n");
 
 			break;
@@ -62,7 +60,6 @@ public class CilentReceiver extends Thread {
 			List<String> usernameList = (List<String>) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
 			boolean isRoomOwner = true;
 			ClientApp.getInstance().getUserListModel().clear();
-			// 방장일 때
 			for (String username : usernameList) {
 				if (isRoomOwner) {
 					username = "*" + username;
@@ -70,17 +67,18 @@ public class CilentReceiver extends Thread {
 				}
 				ClientApp.getInstance().getUserListModel().addElement(username);
 			}
+
 			break;
 
 		case "receivePrivateMessage":
 			String privateMessageContent = (String) gson.fromJson(requestBody, RequestBodyDTO.class).getBody();
-			System.out.println(privateMessageContent);
 			ClientApp.getInstance().getMessageArea().append(privateMessageContent + "\n");
+
 			break;
 
 		default:
 			break;
 
-		}// switch 종료
-	}// requestController 종료
-} // 클래스 종료
+		}
+	}
+}

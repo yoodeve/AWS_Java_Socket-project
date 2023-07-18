@@ -12,8 +12,6 @@ import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Objects;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -163,21 +161,17 @@ public class ClientApp extends JFrame {
 		confirmBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-// 닉네임버튼 클릭
-				String regExpAlpha = "[^a-zA-Z]";
-				Pattern pattern = Pattern.compile(regExpAlpha);
 				String nickname = nickInputTextField.getText();
-				Matcher matcher = pattern.matcher(nickname);
 				if (Objects.isNull(nickname)) {
+					JOptionPane.showMessageDialog(roomListPanel, "방이름은 빈칸일 수 없습니다", "방만들기 실패",
+							JOptionPane.ERROR_MESSAGE);
 					return;
+
 				}
-//				if (!nickname.matches(regExpAlpha)) {
-//					JOptionPane.showMessageDialog(roomListPanel, "문자를 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
-//					return;
-//				}
 				if (nickname.isBlank()) {
-					JOptionPane.showMessageDialog(roomListPanel, "닉네임을 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(roomListPanel, "방이름을 입력해주세요", "방만들기 실패", JOptionPane.ERROR_MESSAGE);
 					return;
+
 				}
 
 				if (!isRoomOwner) {
@@ -231,7 +225,6 @@ public class ClientApp extends JFrame {
 		roomMakeBtn.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-// 방만들기 버튼 클릭
 				String roomName = roomMakeTxtField.getText();
 				if (Objects.isNull(roomName)) {
 					return;
@@ -274,7 +267,6 @@ public class ClientApp extends JFrame {
 		roomList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-// 룸리스트 클릭(더블클릭) => 채팅룸 입장
 				if (e.getClickCount() == 2) {
 					String roomName = roomListModel.get(roomList.getSelectedIndex());
 					mainCardLayout.show(mainCardPanel, "chatPanel");
@@ -332,10 +324,7 @@ public class ClientApp extends JFrame {
 									sendMessage);
 							ClientSender.getInstance().send(requestBodyDTO);
 							messageTextField.setText("");
-						}
-						// 모든 유저에게 메시지 보내기
-
-						else {// 선택한 유저에게 귓속말 보내기
+						} else {
 							SendMessage sendMessage = SendMessage.builder().fromUsername(nickInputTextField.getText())
 									.toUsername(selectedUser).messageBody(messageText).build();
 
@@ -362,7 +351,6 @@ public class ClientApp extends JFrame {
 		userList.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				// 유저 목록 더블 클릭
 				if (e.getClickCount() == 2) {
 					selectedUser = (String) userList.getSelectedValue();
 					if (!selectedUser.equals(myNameLabel.getText())) {
