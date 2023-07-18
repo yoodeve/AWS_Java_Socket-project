@@ -3,7 +3,7 @@
 
 ## 소켓 객체를 이용하여 멀티룸을 생성하는 프로그램의 리포지토리입니다!
 <div>
-  ![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/f17856e2-f206-481a-b0d4-53c9c09bb39c)
+  ![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/d72690fe-d942-4650-bb4d-3b49e6cc389a)
 </div>
 
 ## Scenario
