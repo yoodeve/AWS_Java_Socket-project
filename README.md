@@ -2,14 +2,11 @@
 자바 멀티 채팅 프로젝트 !
 
 ## 소켓 객체를 이용하여 멀티룸을 생성하는 프로그램의 리포지토리입니다!
-<div>
-  ![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/d72690fe-d942-4650-bb4d-3b49e6cc389a)
-</div>
+![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/96e1ac37-abc6-4d40-b73a-8a7aa94b0236)
 
 ## Scenario
-<div>
-  ![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/c8d095b3-12ae-4eb1-9c3f-4a7ded1eafff)
-</div>
+![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/c8d095b3-12ae-4eb1-9c3f-4a7ded1eafff)
+
 
 ## 기능
 ### 입장
