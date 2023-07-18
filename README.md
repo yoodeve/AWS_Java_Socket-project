@@ -11,11 +11,6 @@
   ![image](https://github.com/yoodeve/AWS_Java_Socket-project/assets/96562253/602a2bdd-bb4c-429d-a6e1-1dbba3d44318)
 </div>
 
-<br />
-<br />
-<br />
-
-
 ## 기능
 ### 입장
 1. 닉네임 유효성 검사(빈칸여부)
